@@ -112,4 +112,30 @@ $ ls
 
 ---
 
-This should be a well-organized `README.md` file for your GitHub repository."
+
+---
+
+## Repository Types in Nexus
+
+### 1. Proxy Repository
+- **Purpose**: Download dependencies from remote public or private repositories.
+- **Usage**: Acts as a cache for external repositories, reducing external network dependency and improving build performance.
+
+### 2. Hosted Repository
+- **Purpose**: Store artifacts that are deployed within the organization.
+- **Types**:
+  - **Snapshot Repository**:
+    - Stores artifacts deployed from feature or development branches.
+    - Used during the development cycle for continuous integration.
+  - **Release Repository**:
+    - Stores production-ready artifacts.
+    - Typically deployed from the master branch or release tags.
+    - Ensures that only stable and tested versions of artifacts are available for production use.
+
+### 3. Group Repository
+- **Purpose**: Group multiple repositories (both hosted and proxy) under a single URL.
+- **Usage**: Simplifies access to multiple repositories by combining them into a single repository endpoint.
+
+---
+
+This information expands on the different types of repositories managed by a Repository Manager like Nexus."
