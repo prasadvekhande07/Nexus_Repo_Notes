@@ -469,3 +469,82 @@ $ curl -u nana:Bibilo123 -X GET 'http://167.99.248.163:8081/service/rest/v1/comp
 ---
 
 This should give you a clear understanding of how to interact with Nexus using its REST API.
+
+Here are your notes on Blob Store in Nexus:
+
+---
+
+## Blob Store - Introduction
+
+### Overview
+- **Blob Store**: Nexus Storage used to store all uploaded files, specifically binary files.
+- **Storage Options**: Files can be stored locally or in cloud storage.
+
+### File Structure
+- Navigate to the Nexus work directory to view blob stores:
+  
+```bash
+$ cd /opt/sonatype-work/nexus3/
+$ ls
+blobs db etc instances keystores cache elasticsearch generated-bundles karaf.pid lock orient restore-from-backup
+```
+
+- **Blobs Directory**: Contains all blob stores.
+  
+```bash
+$ cd blobs
+$ ls 
+default
+```
+
+- **Content Directory**: Holds all the stored data.
+  
+```bash
+$ cd default
+$ ls 
+9C336132-6A408647-FA393A01-C324F353-CF09AD4B-deletions.index content 9C336132-6A408647-FA393A01-C324F353-CF09AD4B-metrics.properties metadata.properties
+```
+
+---
+
+## Blob Store Types
+
+- **Type Field**: Indicates the storage backend type.
+  - **File**: File system-based storage (default option).
+  - **S3**: Cloud-based storage (used when Nexus is hosted on AWS).
+
+- **State Field**: Represents the current state of the blob store.
+  - **Started**: Blob store is running as expected.
+  - **Failed**: Indicates a configuration issue, and the store failed to initialize.
+
+- **Blob Count Field**: Shows the number of blobs currently stored.
+
+---
+
+## Creating File-Type Blob Storage
+
+- **Path**: 
+  - Must provide an absolute path to the desired file system location.
+  - Example: `/opt/sonatype-work/nexus3/blobs/mystore`
+  - Ensure the path is fully accessible by the OS user account (Nexus user).
+
+---
+
+## Blob Store - Considerations
+
+- **Immutability**: 
+  - Blob stores cannot be modified once created.
+  - Blob stores used by a repository cannot be deleted.
+
+- **Planning**:
+  - Decide how many blob stores to create and their sizes.
+  - Determine which blob stores will be used for which repositories.
+  - Estimate the approximate space requirements for each repository.
+
+- **Repository Allocation**:
+  - Once a repository is allocated to a blob store, it is permanently allocated.
+  - A single repository cannot use multiple blob storages.
+
+---
+
+This guide should help you understand the basics of Blob Store in Nexus and the key considerations when managing it.
