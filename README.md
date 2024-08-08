@@ -390,3 +390,82 @@ repoPasswd = secure_password
 This section should provide a clear guide on how to create a Nexus user with the appropriate roles for uploading artifacts to the Maven snapshot repository.
 
 This consolidated guide covers both Maven and Gradle projects for uploading JAR files to Nexus, ensuring that you have all the necessary steps in one place."
+
+
+Here are your notes on Nexus API:
+
+---
+
+## Nexus API - Introduction
+
+### Overview
+- Nexus API allows querying the Nexus Repository for various information, such as:
+  - **Available Components**: Determine which components are stored in the repository.
+  - **Available Repositories**: Identify the different repositories in Nexus.
+  - **Available Versions**: Find out which versions of components are available.
+
+### Use Cases
+- **CI/CD Pipeline Integration**: 
+  - Fetch information on available versions to decide which version to deploy to staging or production environments.
+  - Automate the process of selecting and deploying specific versions programmatically, especially useful when pushing multiple artifacts daily.
+- **Build Automation**: 
+  - Integrate with the Nexus API to automate artifact version management in complex build automation setups.
+
+### Flexibility
+- Nexus APIs are flexible and offer several important endpoints for interacting with the repository.
+
+---
+
+### How to Access the REST Endpoint
+
+- **Tools**: Use tools like `curl` or `wget` to execute HTTP requests.
+- **Authentication**: Provide the credentials of a Nexus user with the necessary permissions.
+
+#### Example 1: Querying Repositories
+
+```bash
+$ curl -u nana:Bib110123 -X GET 'http://167.99.248.163:8081/service/rest/v1/repositories'
+```
+
+Response:
+```json
+{
+  "name": "maven-snapshots",
+  "format": "maven2",
+  "type": "hosted",
+  "url": "http://167.99.248.163:8081/repository/maven-snapshots",
+  "attributes": {}
+}
+```
+
+- **Note**: If the user has access to only one repository, only that repository will be shown in the response.
+
+#### Example 2: Listing Components in a Repository
+
+```bash
+$ curl -u nana:Bibilo123 -X GET 'http://167.99.248.163:8081/service/rest/v1/components?repository=maven-snapshots'
+```
+
+- This command lists all components within the `maven-snapshots` repository using a query parameter. If the user lacks access, it won't throw an error but simply won’t return any data.
+
+#### Example 3: Retrieving a Specific Component by ID
+
+```bash
+$ curl -u nana:Bibilo123 -X GET 'http://167.99.248.163:8081/service/rest/v1/components/bWF2ZW4tc25hcHNob3RzOjcxYWZ]YTU®MGUyM2RkZTViMmQ4NGY3ZmE4MDk5TM'
+```
+
+- To fetch details of a specific component, append its ID to the components endpoint.
+
+---
+
+### Endpoint Structure
+
+- **Base URL**: `http://167.99.248.163:8081/`
+- **Common Endpoint**: `/service/rest/v1/`
+- **Examples**:
+  - **Repositories**: `/service/rest/v1/repositories`
+  - **Components**: `/service/rest/v1/components`
+
+---
+
+This should give you a clear understanding of how to interact with Nexus using its REST API.
