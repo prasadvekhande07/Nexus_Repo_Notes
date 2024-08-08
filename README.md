@@ -192,6 +192,9 @@ publishing {
   - **`apply plugin: 'maven-publish'`**: Enables publishing capabilities.
   - **`artifact("build/libs/my-app-$version.jar")`**: Specifies the JAR file to upload.
   - **Repository Configuration**: Includes Nexus repository URL and credentials.
+  - We need to manually create this user and assign roles to access maven snapshot repository to upload the artifacts for this follow this step
+    > ### 7. Creating a Nexus User with Specific Roles (search with ctrl + f)
+ 
 
 #### c. Store Nexus Credentials Securely in `gradle.properties`
 ```groovy
@@ -325,5 +328,65 @@ After deploying, artifacts will be organized under their respective groups:
 - **Gradle**: `com.example/my-app`
 
 ---
+
+Here's an additional section to your notes that explains how to manually create a user in Nexus and assign roles for accessing the Maven snapshot repository:
+
+---
+
+### 7. Creating a Nexus User with Specific Roles
+
+To securely upload artifacts to your Nexus repository, it's best to create a dedicated user with the necessary permissions rather than using admin credentials.
+
+#### a. Log in to Nexus Repository Manager
+
+1. Open your browser and go to the Nexus Repository Manager URL.
+2. Log in using your admin credentials.
+
+#### b. Create a New User
+
+1. **Navigate to**: "Security" > "Users".
+2. Click on the "Create user" button.
+
+3. **Fill in the Details**:
+   - **Username**: Provide a username (e.g., `upload_user`).
+   - **Password**: Set a secure password.
+   - **First Name / Last Name / Email**: Optional but recommended for identification.
+
+4. **Assign Roles**:
+   - Scroll down to the "Roles" section.
+   - Assign roles that allow access to the Maven snapshot repository, such as:
+     - **nx-repository-view-maven2-snapshot-*:read**
+     - **nx-repository-view-maven2-snapshot-*:write**
+     - **nx-repository-view-*-*:add**
+     - **nx-repository-view-*-*:browse**
+   - Optionally, assign more specific roles depending on your security policy.
+
+5. **Save the User**: Click "Create user" to save.
+
+#### c. Use This User for Maven/Gradle Uploads
+
+- Use the credentials of this newly created user in your `settings.xml` (for Maven) or `gradle.properties` (for Gradle) to upload artifacts.
+
+```xml
+<server>
+    <id>nexus-snapshots</id>
+    <username>upload_user</username>
+    <password>secure_password</password>
+</server>
+```
+
+```groovy
+repoUser = upload_user
+repoPasswd = secure_password
+```
+
+### Benefits
+
+- **Security**: By creating a specific user with limited roles, you minimize the security risks associated with using admin credentials.
+- **Access Control**: Assigning roles ensures that the user can only perform actions related to uploading artifacts, nothing more.
+
+---
+
+This section should provide a clear guide on how to create a Nexus user with the appropriate roles for uploading artifacts to the Maven snapshot repository.
 
 This consolidated guide covers both Maven and Gradle projects for uploading JAR files to Nexus, ensuring that you have all the necessary steps in one place."
