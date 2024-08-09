@@ -548,3 +548,48 @@ $ ls
 ---
 
 This guide should help you understand the basics of Blob Store in Nexus and the key considerations when managing it.
+
+Here’s a breakdown of how to create and implement cleanup policies for a Maven repository, along with how to manage the deletion process for the blob store:
+
+### Cleanup Policy for Maven Repository
+1. **Objective**: 
+   - Create a cleanup policy that removes artifacts from the Maven repository but retains them in the blob store.
+   - Mark these artifacts as deleted in the repository.
+
+2. **Steps to Create Cleanup Policy**:
+   - **Navigate to Cleanup Policies**:
+     1. Go to the Nexus Repository Manager.
+     2. Under the "Administration" menu, select "Repository" and then "Cleanup Policies."
+   
+   - **Define the Policy**:
+     1. **Name**: Give the policy a meaningful name (e.g., "Maven Repository Cleanup - Retain in Blob Store").
+     2. **Format**: Select "Maven" as the format.
+     3. **Criteria**: Define criteria for selecting artifacts to be cleaned up (e.g., by age, release status, etc.).
+     4. **Action**: Set the policy to remove the selected artifacts from the repository but **do not delete** them from the blob store.
+     5. **Mark as Deleted**: Ensure the policy marks the artifacts as deleted without removing them from the blob store.
+   
+   - **Apply the Policy**:
+     1. Attach this cleanup policy to the desired Maven repository.
+     2. Schedule the cleanup policy to run at a regular interval.
+
+### Compact Blob Task for Deletion from Blob Store
+1. **Objective**:
+   - Create a task to permanently delete the components and assets from the blob store that have been marked as deleted.
+
+2. **Steps to Create Compact Blob Task**:
+   - **Navigate to Task Configuration**:
+     1. Go to the "Tasks" section under "Administration."
+     2. Click on "Create task" and select the "Compact Blob Store" task.
+   
+   - **Define the Task**:
+     1. **Name**: Provide a name for the task (e.g., "Compact Blob Store - Maven Cleanup").
+     2. **Blob Store**: Select the relevant blob store associated with the Maven repository.
+     3. **Schedule**: Set the task to run at an appropriate interval, perhaps after the cleanup policy has been executed.
+
+3. **Execution**:
+   - Once the cleanup policy has been run, execute the Compact Blob task to permanently delete the marked components and assets from the blob store.
+
+### Notes
+- **Separation of Concerns**: By separating the cleanup and deletion processes, you maintain flexibility in managing repository and storage space.
+- **Blob Store Management**: Regularly running the Compact Blob task ensures that your blob store does not accumulate unnecessary artifacts marked as deleted.
+- **Backup and Recovery**: Ensure you have a backup policy in place before running these tasks to prevent accidental data loss.
